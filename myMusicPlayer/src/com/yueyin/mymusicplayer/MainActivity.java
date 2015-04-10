@@ -8,6 +8,7 @@ import com.yueyin.mymusicplayer.MusicplayerData;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -23,12 +24,11 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 	public static Context context;
 	private ImageButton all_music,hot_rank,singer,album,playlist,waitplaylist,mylist,folder;
-	private TextView songname,singername;
-	private ImageButton pre_song,play,next_song;
-    @Override
+    private PlayControl playControl;
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       double height_rate=0.17;
+        double height_rate=0.17;
         setContentView(R.layout.activity_main);
         
         context=this.getApplicationContext();
@@ -40,6 +40,7 @@ public class MainActivity extends Activity {
         waitplaylist=(ImageButton) findViewById(R.id.waitplaylist);
         mylist=(ImageButton) findViewById(R.id.mylist);
         folder=(ImageButton) findViewById(R.id.folder);
+        playControl=(PlayControl) findViewById(R.id.playcontrol);
         Display display = this.getWindowManager().getDefaultDisplay();
         MusicplayerData.screen_width=display.getWidth();
         MusicplayerData.screen_height=display.getHeight();
@@ -63,41 +64,41 @@ public class MainActivity extends Activity {
         mylist.setMinimumWidth((int) (width*0.45));
         folder.setMinimumWidth((int) (width*0.45));
         
-        songname=(TextView) findViewById(R.id.song_name);
-        singername=(TextView) findViewById(R.id.singer_name);
-        pre_song=(ImageButton) findViewById(R.id.pre_song);
-        play=(ImageButton) findViewById(R.id.play);
-        next_song =(ImageButton) findViewById(R.id.next_song);
+//        songname=(TextView) findViewById(R.id.song_name);
+//        singername=(TextView) findViewById(R.id.singer_name);
+//        pre_song=(ImageButton) findViewById(R.id.pre_song);
+//        play=(ImageButton) findViewById(R.id.play);
+//        next_song =(ImageButton) findViewById(R.id.next_song);
         
         read_last_list();
         initMediaPlayer();
         
-        pre_song.setOnClickListener(new Button.OnClickListener(){
-        	public void onClick(View v){
-        		MusicplayerControl.premusic(context, MusicplayerData.currentPosition,play);
-        	}
-        });
-        next_song.setOnClickListener(new Button.OnClickListener(){
-        	public void onClick(View v){
-        		MusicplayerControl.nextmusic(context, MusicplayerData.currentPosition,play);
-        	}
-        });
-       play.setOnClickListener(new Button.OnClickListener(){
-        	public void onClick(View v){
-        		if (MusicplayerData.play_flag){
-        			MusicplayerData.myMediaPlayer.pause();
-        			Resources r = getResources(); 
-        			Drawable img=r.getDrawable(R.drawable.pause);
-        			play.setImageDrawable(img);
-        		}else{
-        			MusicplayerData.myMediaPlayer.start();
-        			Resources r = getResources(); 
-        			Drawable img=r.getDrawable(R.drawable.play);
-        			play.setImageDrawable(img);
-        		}
-        		MusicplayerData.play_flag=!MusicplayerData.play_flag;
-        	}
-        });
+//        pre_song.setOnClickListener(new Button.OnClickListener(){
+//        	public void onClick(View v){
+//        		MusicplayerControl.premusic(context, MusicplayerData.currentPosition,play);
+//        	}
+//        });
+//        next_song.setOnClickListener(new Button.OnClickListener(){
+//        	public void onClick(View v){
+//        		MusicplayerControl.nextmusic(context, MusicplayerData.currentPosition,play);
+//        	}
+//        });
+//       play.setOnClickListener(new Button.OnClickListener(){
+//        	public void onClick(View v){
+//        		if (MusicplayerData.play_flag){
+//        			MusicplayerData.myMediaPlayer.pause();
+//        			Resources r = getResources(); 
+//        			Drawable img=r.getDrawable(R.drawable.pause);
+//        			play.setImageDrawable(img);
+//        		}else{
+//        			MusicplayerData.myMediaPlayer.start();
+//        			Resources r = getResources(); 
+//        			Drawable img=r.getDrawable(R.drawable.play);
+//        			play.setImageDrawable(img);
+//        		}
+//        		MusicplayerData.play_flag=!MusicplayerData.play_flag;
+//        	}
+//        }); 
         
         all_music.setOnClickListener(new ImageButton.OnClickListener(){//创建监听    
             public void onClick(View v) {    
@@ -111,11 +112,13 @@ public class MainActivity extends Activity {
 
 
     private void read_last_list(){
+    	
 		try{ 
 			String src="/data/data/com.yueyin.mymusicplayer/files/"+MusicplayerData.Play_song_and_list_info_filepath;
 			File file=new File(src);
 			if (!file.exists()){
 				MusicplayerControl.save_music_list(context,MusicplayerData.All_music_info_filepath, 0);
+				System.out.println("file not exists");
 			}
 			
 	         FileInputStream fin = openFileInput(MusicplayerData.Play_song_and_list_info_filepath);
@@ -128,9 +131,17 @@ public class MainActivity extends Activity {
 			 System.out.println(filepath+"   "+position);
 	         fin.close();     
 	        } 
-	        catch(Exception e){ 
+	        catch(Exception e){  
 	         e.printStackTrace(); 
 	        } 
+		SharedPreferences mSharedPreferences = getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
+		String filepath="All_musiclist.ini";
+		int position=0;
+		filepath=mSharedPreferences.getString("listpath", filepath);
+		position=mSharedPreferences.getInt("curPosition",position);
+		MusicplayerData.currentMusiclist_filename=filepath;
+		MusicplayerData.currentPosition=position;
+		System.out.println("Read:"+filepath+position);
 	}
     private void Read_musicfile_list(String filepath)
 	{
@@ -150,8 +161,9 @@ public class MainActivity extends Activity {
     private void initMediaPlayer(){
     	String src=MusicplayerData.musicfile.get(MusicplayerData.currentPosition);
     	Musicinfo musicinfo=Musicinfo.getMetaData(src);
-    	songname.setText(musicinfo.title);
-    	singername.setText(musicinfo.artist);
+    	playControl.setSingerSongName(musicinfo.title, musicinfo.artist);
+//    	songname.setText(musicinfo.title);
+//    	singername.setText(musicinfo.artist);
     	try{
 	    	MusicplayerData.myMediaPlayer.reset();
 			MusicplayerData.myMediaPlayer.setDataSource(src);
