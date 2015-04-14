@@ -1,7 +1,5 @@
 package com.yueyin.mymusicplayer;
 
-import java.io.FileOutputStream;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -25,15 +23,15 @@ public class MusicplayerControl extends Activity {
 			MusicplayerData.myMediaPlayer.prepare();
 			MusicplayerData.myMediaPlayer.start();
 			
-			if (MusicplayerData.play_flag==false){
+			if (MusicplayerData.playStatus==false){
 				Resources r = context.getResources(); 
     			Drawable img=r.getDrawable(R.drawable.play);
     			playbutton.setImageDrawable(img);
-    			MusicplayerData.play_flag=true;
+    			MusicplayerData.playStatus=true;
 			} 
 			MusicplayerData.musiclist_lastplay.add(src);
 			MusicplayerData.currentPosition=position;
-			save_music_list(context,MusicplayerData.currentMusiclist_filename, position);
+			save_music_list(context);
 			MusicplayerData.myMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 	            
 	            @Override
@@ -44,6 +42,21 @@ public class MusicplayerControl extends Activity {
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
+	}
+	public static  void playOrPause(final Context context,final ImageButton play)
+	{
+		if (MusicplayerData.playStatus){
+			MusicplayerData.myMediaPlayer.pause();
+			Resources r = context.getResources(); 
+			Drawable img=r.getDrawable(R.drawable.pause);
+			play.setImageDrawable(img);
+		}else{
+			MusicplayerData.myMediaPlayer.start();
+			Resources r = context.getResources(); 
+			Drawable img=r.getDrawable(R.drawable.play);
+			play.setImageDrawable(img);
+		}
+		MusicplayerData.playStatus=!MusicplayerData.playStatus;
 	}
 	public  static void nextmusic(final Context context,int position,final ImageButton playbutton)
 	{
@@ -61,29 +74,14 @@ public class MusicplayerControl extends Activity {
 		playmusic(context,position,playbutton);
 	}
 	
-	public static  void save_music_list(final Context context,String listPath,Integer pos)
+	public static  void save_music_list(final Context context)
 	{
-		SharedPreferences mSharedPreferences = context.getSharedPreferences("MainActivity.class", Context.MODE_PRIVATE);  
+		SharedPreferences mSharedPreferences = context.getSharedPreferences("MainActivity", Context.MODE_PRIVATE);  
 		SharedPreferences.Editor edit=mSharedPreferences.edit();
 		
-		edit.putString("listpath", listPath);
-		edit.putInt("curPosition", pos);
-		System.out.println("write: "+listPath+pos);
-		
-		try{
-				FileOutputStream fout =
-						context.openFileOutput(
-						MusicplayerData.Play_song_and_list_info_filepath,Activity.MODE_PRIVATE);
-		       byte [] bytes = listPath.getBytes(); 
-		       fout.write(bytes);
-	    	   String newLine = System.getProperty("line.separator");
-	    	   fout.write(newLine.getBytes());
-	    	   bytes=(pos.toString()).getBytes(); 	
-	    	   fout.write(bytes);
-		       fout.close();   
-		     }catch(Exception e){   
-		        e.printStackTrace();   
-		     }   
+		edit.putString("listpath", MusicplayerData.currentMusiclistFilename);
+		edit.putInt("curPosition", MusicplayerData.currentPosition);
+		edit.commit();
 	}
 	
 }

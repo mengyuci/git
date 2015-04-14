@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	public static Context context;
-	private ImageButton all_music,hot_rank,singer,album,playlist,waitplaylist,mylist,folder;
+	private ImageButton allMusic,hotRank,singer,album,playlist,waitplaylist,mylist,folder;
     private PlayControl playControl;
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +32,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         
         context=this.getApplicationContext();
-        all_music=(ImageButton) findViewById(R.id.all_music);
-        hot_rank=(ImageButton) findViewById(R.id.hot_rank);
+        allMusic=(ImageButton) findViewById(R.id.all_music);
+        hotRank=(ImageButton) findViewById(R.id.hot_rank);
         singer=(ImageButton) findViewById(R.id.singer);
         album=(ImageButton) findViewById(R.id.album);
         playlist=(ImageButton) findViewById(R.id.playlist);
@@ -42,12 +42,12 @@ public class MainActivity extends Activity {
         folder=(ImageButton) findViewById(R.id.folder);
         playControl=(PlayControl) findViewById(R.id.playcontrol);
         Display display = this.getWindowManager().getDefaultDisplay();
-        MusicplayerData.screen_width=display.getWidth();
-        MusicplayerData.screen_height=display.getHeight();
+        MusicplayerData.screenWidth=display.getWidth();
+        MusicplayerData.screenHeight=display.getHeight();
         int width = display.getWidth();
         int height=display.getHeight();
-        all_music.setMinimumHeight((int) ((height)*height_rate));
-        hot_rank.setMinimumHeight((int) ((height)*height_rate));
+        allMusic.setMinimumHeight((int) ((height)*height_rate));
+        hotRank.setMinimumHeight((int) ((height)*height_rate));
         singer.setMinimumHeight((int) ((height)*height_rate));
         album.setMinimumHeight((int) ((height)*height_rate));
         playlist.setMinimumHeight((int) ((height)*height_rate));
@@ -55,8 +55,8 @@ public class MainActivity extends Activity {
         mylist.setMinimumHeight((int) ((height)*height_rate));
         folder.setMinimumHeight((int) ((height)*height_rate));
         
-        all_music.setMinimumWidth((int) (width*0.45));
-        hot_rank.setMinimumWidth((int) (width*0.45));
+        allMusic.setMinimumWidth((int) (width*0.45));
+        hotRank.setMinimumWidth((int) (width*0.45));
         singer.setMinimumWidth((int) (width*0.45));
         album.setMinimumWidth((int) (width*0.45));
         playlist.setMinimumWidth((int) (width*0.45));
@@ -70,7 +70,12 @@ public class MainActivity extends Activity {
 //        play=(ImageButton) findViewById(R.id.play);
 //        next_song =(ImageButton) findViewById(R.id.next_song);
         
+        
+        
+        
         read_last_list();
+        Read_musicfile_list(MusicplayerData.currentMusiclistFilename);
+        System.out.println(MusicplayerData.currentPosition+"  "+MusicplayerData.musicfile.size());
         initMediaPlayer();
         
 //        pre_song.setOnClickListener(new Button.OnClickListener(){
@@ -100,7 +105,7 @@ public class MainActivity extends Activity {
 //        	}
 //        }); 
         
-        all_music.setOnClickListener(new ImageButton.OnClickListener(){//创建监听    
+        allMusic.setOnClickListener(new ImageButton.OnClickListener(){//创建监听    
             public void onClick(View v) {    
                 String strTmp = "点击Button01";    
                 System.out.println(strTmp);
@@ -112,45 +117,22 @@ public class MainActivity extends Activity {
 
 
     private void read_last_list(){
-    	
-		try{ 
-			String src="/data/data/com.yueyin.mymusicplayer/files/"+MusicplayerData.Play_song_and_list_info_filepath;
-			File file=new File(src);
-			if (!file.exists()){
-				MusicplayerControl.save_music_list(context,MusicplayerData.All_music_info_filepath, 0);
-				System.out.println("file not exists");
-			}
-			
-	         FileInputStream fin = openFileInput(MusicplayerData.Play_song_and_list_info_filepath);
-	         DataInputStream dataIO = new DataInputStream(fin);
-			 String filepath =  dataIO.readLine();
-			 int position = Integer.parseInt(dataIO.readLine()); 
-			 MusicplayerData.currentMusiclist_filename=filepath;
-			 MusicplayerData.currentPosition=position;
-			 Read_musicfile_list(filepath);
-			 System.out.println(filepath+"   "+position);
-	         fin.close();     
-	        } 
-	        catch(Exception e){  
-	         e.printStackTrace(); 
-	        } 
 		SharedPreferences mSharedPreferences = getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
 		String filepath="All_musiclist.ini";
 		int position=0;
 		filepath=mSharedPreferences.getString("listpath", filepath);
 		position=mSharedPreferences.getInt("curPosition",position);
-		MusicplayerData.currentMusiclist_filename=filepath;
+		MusicplayerData.currentMusiclistFilename=filepath;
 		MusicplayerData.currentPosition=position;
-		System.out.println("Read:"+filepath+position);
 	}
-    private void Read_musicfile_list(String filepath)
+    private void Read_musicfile_list(String filepath) 
 	{
 		try{
 			FileInputStream fin = openFileInput(filepath);  
 			DataInputStream dataIO = new DataInputStream(fin);
 			String strline;
 			while ((strline =  dataIO.readLine()) != null)
-			{
+			{ 
 				MusicplayerData.musicfile.add(strline);
 			}
 		}catch(Exception e){   
@@ -159,16 +141,19 @@ public class MainActivity extends Activity {
 	}
     
     private void initMediaPlayer(){
-    	String src=MusicplayerData.musicfile.get(MusicplayerData.currentPosition);
+    	if (MusicplayerData.playStatus)
+    		return ; 
+    	String src=MusicplayerData.musicfile.get((MusicplayerData.currentPosition)%MusicplayerData.musicfile.size());
     	Musicinfo musicinfo=Musicinfo.getMetaData(src);
     	playControl.setSingerSongName(musicinfo.title, musicinfo.artist);
+    	System.out.println("init MediaPlayer:"+musicinfo.title+musicinfo.artist);
 //    	songname.setText(musicinfo.title);
 //    	singername.setText(musicinfo.artist);
     	try{
-	    	MusicplayerData.myMediaPlayer.reset();
+	    	MusicplayerData.myMediaPlayer.reset(); 
 			MusicplayerData.myMediaPlayer.setDataSource(src);
 			MusicplayerData.myMediaPlayer.prepare();
-    	}catch (Exception e)
+    	}catch (Exception e) 
     	{ 
     		e.printStackTrace();
     	}

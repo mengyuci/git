@@ -34,7 +34,7 @@ public class Song_list extends Activity {
 	private PopupWindow popupWindow;
 	private List<HashMap<String, Object>> data;
 	private Context context;
-	private String musiclist_path;
+	private String musiclistPath;
 	private TextView songname,singername;
 	private ImageButton pre_song,play,next_song;
 	@Override
@@ -48,7 +48,7 @@ public class Song_list extends Activity {
         play=(ImageButton) findViewById(R.id.play_list);
         next_song =(ImageButton) findViewById(R.id.next_song_list);
 		
-		musiclist_path=MusicplayerData.All_music_info_filepath;
+        musiclistPath=MusicplayerData.allMusiclistFilepath;
 		context=this.getApplicationContext();
 		more=(ImageButton) findViewById(R.id.more);
 		listview=(ListView) findViewById(R.id.listView_song_name);
@@ -69,7 +69,7 @@ public class Song_list extends Activity {
 				if (!MusicplayerData.currentmusicfile.equals(MusicplayerData.musicfile)){
 					MusicplayerData.musicfile=MusicplayerData.currentmusicfile;
 				}
-				MusicplayerData.currentMusiclist_filename=musiclist_path;
+				MusicplayerData.currentMusiclistFilename=musiclistPath;
 				MusicplayerControl.playmusic(context,position,play);
 			}
 	    });
@@ -85,7 +85,7 @@ public class Song_list extends Activity {
 	}
 	private void getmusiclist(){
 		try{
-			FileInputStream fin = openFileInput(MusicplayerData.All_music_info_filepath);  
+			FileInputStream fin = openFileInput(MusicplayerData.allMusiclistFilepath);  
 			DataInputStream dataIO = new DataInputStream(fin);
 			String strline;
 			while ((strline =  dataIO.readLine()) != null)
@@ -142,16 +142,17 @@ public class Song_list extends Activity {
 	
 	private void read_last_list(){
 		try{ 
-			File file=new File(MusicplayerData.Play_song_and_list_info_filepath);
+			String src="/data/data/com.yueyin.mymusicplayer/files/"+MusicplayerData.Play_song_and_list_info_filepath;
+			File file=new File(src);
 			if (!file.exists()){
-				MusicplayerControl.save_music_list(context,MusicplayerData.All_music_info_filepath, 0);
+				MusicplayerControl.save_music_list(context);
 			}
 			
 	         FileInputStream fin = openFileInput(MusicplayerData.Play_song_and_list_info_filepath);
 	         DataInputStream dataIO = new DataInputStream(fin);
 			 String filepath =  dataIO.readLine();
 			 int position = Integer.parseInt(dataIO.readLine());
-			 MusicplayerData.currentMusiclist_filename=filepath;
+			 MusicplayerData.currentMusiclistFilename=filepath;
 			 MusicplayerData.currentPosition=position;
 			 Read_musicfile_list(filepath);
 			 System.out.println(filepath+"   "+position);
@@ -186,7 +187,7 @@ public class Song_list extends Activity {
 	}
 	private void initPopuptWindow(){
 		View popupWindow_view = getLayoutInflater().inflate(R.layout.title_popupwindow, null,false);
-		popupWindow = new PopupWindow(popupWindow_view, (int)(MusicplayerData.screen_width*0.25), 80, true);
+		popupWindow = new PopupWindow(popupWindow_view, (int)(MusicplayerData.screenWidth*0.25), 80, true);
 		
 		Button scan_music=(Button)popupWindow_view.findViewById(R.id.scan_music);
 		Button exit=(Button) popupWindow_view.findViewById(R.id.title_exit);

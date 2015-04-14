@@ -1,6 +1,8 @@
 package com.yueyin.mymusicplayer;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageButton;
@@ -10,7 +12,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class PlayControl extends RelativeLayout {
-
+	public static Context contextForWrite;
 	private SeekBar seekbar;
 	private ImageView singerPhoto;
 	private TextView singerName,songName,hotText;
@@ -30,11 +32,28 @@ public class PlayControl extends RelativeLayout {
 		play=(ImageButton) view.findViewById(R.id.play);
 		nextSong=(ImageButton) view.findViewById(R.id.next_song);
 		
+		contextForWrite=this.getContext();
+		
 		preSong.setOnClickListener(new ImageButton.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				hotText.setText("preSong");
+				MusicplayerControl.premusic(contextForWrite, MusicplayerData.currentPosition,play);
+			}
+		});
+		play.setOnClickListener(new ImageButton.OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+        		MusicplayerControl.playOrPause(contextForWrite,play);
+			}
+			
+		});
+		nextSong.setOnClickListener(new ImageButton.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				MusicplayerControl.nextmusic(contextForWrite, MusicplayerData.currentPosition,play);
 			}
 		});
 	}

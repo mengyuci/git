@@ -92,7 +92,7 @@ public class Scan_music_activity extends Activity {
 	private void save_music_list()
 	{
 		try{
-		       FileOutputStream fout = openFileOutput(MusicplayerData.All_music_info_filepath,Activity.MODE_PRIVATE);   
+		       FileOutputStream fout = openFileOutput(MusicplayerData.allMusiclistFilepath,Activity.MODE_PRIVATE);   
 		       for (Iterator<String> it=MusicplayerData.All_musicfile.iterator();it.hasNext();)
 		       {
 		    	   String src=it.next();
