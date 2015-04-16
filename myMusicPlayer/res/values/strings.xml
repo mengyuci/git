@@ -8,6 +8,8 @@
     <string name="hot_rank">热度榜</string>
     <string name="singer">歌手</string>
     <string name="album">专辑</string>
-     <string name="playlist">最近播放</string>
-      <string name="waitplaylist">待播列表</string>
+    <string name="playlist">最近播放</string>
+    <string name="waitplaylist">待播列表</string>
+    <string name="songnamedefault">歌曲名</string>
+    <string name="singernamedefault">歌手姓名</string>
 </resources>

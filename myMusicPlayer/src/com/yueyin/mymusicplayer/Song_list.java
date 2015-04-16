@@ -35,19 +35,14 @@ public class Song_list extends Activity {
 	private List<HashMap<String, Object>> data;
 	private Context context;
 	private String musiclistPath;
-	private TextView songname,singername;
-	private ImageButton pre_song,play,next_song;
+	private PlayControl playControl;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.song_list);
 		
-		songname=(TextView) findViewById(R.id.song_name_list);
-        singername=(TextView) findViewById(R.id.singer_name_list);
-        pre_song=(ImageButton) findViewById(R.id.pre_song_list);
-        play=(ImageButton) findViewById(R.id.play_list);
-        next_song =(ImageButton) findViewById(R.id.next_song_list);
 		
+		playControl=(PlayControl) findViewById(R.id.playcontrol);
         musiclistPath=MusicplayerData.allMusiclistFilepath;
 		context=this.getApplicationContext();
 		more=(ImageButton) findViewById(R.id.more);
@@ -70,7 +65,7 @@ public class Song_list extends Activity {
 					MusicplayerData.musicfile=MusicplayerData.currentmusicfile;
 				}
 				MusicplayerData.currentMusiclistFilename=musiclistPath;
-				MusicplayerControl.playmusic(context,position,play);
+				MusicplayerControl.playmusic(context,position,playControl);
 			}
 	    });
 	    more.setOnClickListener(new ImageButton.OnClickListener(){   

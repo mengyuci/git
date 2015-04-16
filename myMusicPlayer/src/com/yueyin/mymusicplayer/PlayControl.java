@@ -1,8 +1,6 @@
 package com.yueyin.mymusicplayer;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageButton;
@@ -13,11 +11,11 @@ import android.widget.TextView;
 
 public class PlayControl extends RelativeLayout {
 	public static Context contextForWrite;
-	private SeekBar seekbar;
-	private ImageView singerPhoto;
-	private TextView singerName,songName,hotText;
-	private ImageButton preSong,play,nextSong;
-	
+	public SeekBar seekbar;
+	public ImageView singerPhoto;
+	public TextView singerName,songName,hotText;
+	public ImageButton preSong,play,nextSong;
+	private PlayControl playControl;
 	public PlayControl(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		// TODO Auto-generated constructor stub
@@ -31,21 +29,22 @@ public class PlayControl extends RelativeLayout {
 		preSong=(ImageButton) view.findViewById(R.id.pre_song);
 		play=(ImageButton) view.findViewById(R.id.play);
 		nextSong=(ImageButton) view.findViewById(R.id.next_song);
-		
+		playControl=this;
 		contextForWrite=this.getContext();
 		
 		preSong.setOnClickListener(new ImageButton.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				MusicplayerControl.premusic(contextForWrite, MusicplayerData.currentPosition,play);
+				MusicplayerControl.premusic(contextForWrite, MusicplayerData.currentPosition,playControl);
 			}
 		});
 		play.setOnClickListener(new ImageButton.OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
-        		MusicplayerControl.playOrPause(contextForWrite,play);
+				System.out.println("in");
+        		MusicplayerControl.playOrPause(contextForWrite,playControl);
 			}
 			
 		});
@@ -53,7 +52,7 @@ public class PlayControl extends RelativeLayout {
 			
 			@Override
 			public void onClick(View v) {
-				MusicplayerControl.nextmusic(contextForWrite, MusicplayerData.currentPosition,play);
+				MusicplayerControl.nextmusic(contextForWrite, MusicplayerData.currentPosition,playControl);
 			}
 		});
 	}

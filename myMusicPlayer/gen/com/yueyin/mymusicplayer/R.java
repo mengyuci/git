@@ -32,14 +32,15 @@ public final class R {
         public static final int more=0x7f020006;
         public static final int next_song=0x7f020007;
         public static final int pause=0x7f020008;
-        public static final int play=0x7f020009;
-        public static final int playlist=0x7f02000a;
-        public static final int pre_song=0x7f02000b;
-        public static final int singer=0x7f02000c;
-        public static final int singer_smallicon=0x7f02000d;
+        public static final int photodefalut=0x7f020009;
+        public static final int play=0x7f02000a;
+        public static final int playlist=0x7f02000b;
+        public static final int pre_song=0x7f02000c;
+        public static final int singer=0x7f02000d;
+        public static final int singer_smallicon=0x7f02000e;
     }
     public static final class id {
-        public static final int action_settings=0x7f080021;
+        public static final int action_settings=0x7f08001b;
         public static final int album=0x7f080003;
         public static final int all_music=0x7f080000;
         public static final int fanhui=0x7f080014;
@@ -50,28 +51,22 @@ public final class R {
         public static final int hot_rank=0x7f080001;
         public static final int hot_text=0x7f080010;
         public static final int info=0x7f080016;
-        public static final int listView_song_name=0x7f080017;
+        public static final int listView_song_name=0x7f080018;
         public static final int more=0x7f080015;
         public static final int mylist=0x7f080006;
         public static final int next_song=0x7f08000f;
-        public static final int next_song_list=0x7f08001e;
         public static final int play=0x7f08000e;
-        public static final int play_list=0x7f08001d;
         public static final int playcontrol=0x7f080008;
+        public static final int playcontrol_songlist=0x7f080017;
         public static final int playlist=0x7f080004;
         public static final int pre_song=0x7f08000d;
-        public static final int pre_song_list=0x7f08001c;
-        public static final int scan_music=0x7f08001f;
+        public static final int scan_music=0x7f080019;
         public static final int singer=0x7f080002;
         public static final int singer_name=0x7f08000a;
-        public static final int singer_name_list=0x7f08001b;
         public static final int singerphoto=0x7f08000c;
-        public static final int singerphoto_list=0x7f080019;
         public static final int song_name=0x7f080009;
-        public static final int song_name_list=0x7f08001a;
         public static final int songs_process=0x7f08000b;
-        public static final int songs_process_list=0x7f080018;
-        public static final int title_exit=0x7f080020;
+        public static final int title_exit=0x7f08001a;
         public static final int waitplaylist=0x7f080005;
     }
     public static final class layout {
@@ -94,6 +89,8 @@ public final class R {
         public static final int hot_rank=0x7f050004;
         public static final int playlist=0x7f050007;
         public static final int singer=0x7f050005;
+        public static final int singernamedefault=0x7f05000a;
+        public static final int songnamedefault=0x7f050009;
         public static final int waitplaylist=0x7f050008;
     }
     public static final class style {

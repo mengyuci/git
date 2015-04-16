@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="70dp" >
+    android:layout_height="70dp" 
+    android:layout_marginLeft="10dp"
+    android:background="#FFFFFF">
     
     <SeekBar 
 	    android:id="@+id/songs_process"
@@ -12,11 +14,12 @@
 	
 	<ImageView 
 	    android:id="@+id/singerphoto"
-	    android:layout_height="60dp"
-	    android:layout_width="60dp"
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"
 	    android:layout_alignParentLeft="true"
 	    android:layout_above="@id/songs_process"
-	    android:background="#000000" 
+	    android:background="#000000"
+	    android:src="@drawable/photodefalut"
 	    />
 	<TextView 
 	    android:id="@+id/song_name"
@@ -24,14 +27,14 @@
 	    android:layout_width="70dp"
 		android:layout_alignTop="@id/singerphoto"
 		android:layout_toRightOf="@id/singerphoto"
-		android:text="歌曲名"/>
+		android:text="@string/songnamedefault"/>
 	<TextView
 	    android:id="@+id/singer_name"
 	    android:layout_height="wrap_content"
 	    android:layout_width="70dp"
 	    android:layout_toRightOf="@id/singerphoto"
 	    android:layout_below="@id/song_name"
-	    android:text="歌手名字"/>
+	    android:text="@string/singernamedefault"/>
 	<ImageButton 
 	    android:id="@+id/pre_song"
 	    android:layout_height="wrap_content"

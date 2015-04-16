@@ -14,10 +14,12 @@ public class MusicplayerControl extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
-	public static  void playmusic(final Context context,final int position,final ImageButton playbutton)
+	public static  void playmusic(final Context context,final int position,final PlayControl playControl)
 	{
 		try { 
 			String src=MusicplayerData.musicfile.get(position);
+	    	Musicinfo musicinfo=Musicinfo.getMetaData(src);
+	    	playControl.setSingerSongName(musicinfo.title, musicinfo.artist);
 			MusicplayerData.myMediaPlayer.reset();
 			MusicplayerData.myMediaPlayer.setDataSource(src);
 			MusicplayerData.myMediaPlayer.prepare();
@@ -25,8 +27,8 @@ public class MusicplayerControl extends Activity {
 			
 			if (MusicplayerData.playStatus==false){
 				Resources r = context.getResources(); 
-    			Drawable img=r.getDrawable(R.drawable.play);
-    			playbutton.setImageDrawable(img);
+    			Drawable img=r.getDrawable(R.drawable.pause);
+    			playControl.play.setImageDrawable(img);
     			MusicplayerData.playStatus=true;
 			} 
 			MusicplayerData.musiclist_lastplay.add(src);
@@ -36,42 +38,42 @@ public class MusicplayerControl extends Activity {
 	            
 	            @Override
 	            public void onCompletion(MediaPlayer mp) { 
-	                nextmusic(context,position,playbutton);
+	                nextmusic(context,position,playControl);
 	            }
 	        });
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
 	}
-	public static  void playOrPause(final Context context,final ImageButton play)
+	public static  void playOrPause(final Context context,final PlayControl playControl)
 	{
 		if (MusicplayerData.playStatus){
 			MusicplayerData.myMediaPlayer.pause();
 			Resources r = context.getResources(); 
-			Drawable img=r.getDrawable(R.drawable.pause);
-			play.setImageDrawable(img);
+			Drawable img=r.getDrawable(R.drawable.play);
+			playControl.play.setImageDrawable(img);
 		}else{
 			MusicplayerData.myMediaPlayer.start();
 			Resources r = context.getResources(); 
-			Drawable img=r.getDrawable(R.drawable.play);
-			play.setImageDrawable(img);
+			Drawable img=r.getDrawable(R.drawable.pause);
+			playControl.play.setImageDrawable(img);
 		}
 		MusicplayerData.playStatus=!MusicplayerData.playStatus;
 	}
-	public  static void nextmusic(final Context context,int position,final ImageButton playbutton)
+	public  static void nextmusic(final Context context,int position,final PlayControl playControl)
 	{
 		position++;
 		if (position>=MusicplayerData.musicfile.size())
 			position=0;
-		playmusic(context,position,playbutton);
+		playmusic(context,position,playControl);
 	}
 	
-	public  static void premusic(final Context context,int position,final ImageButton playbutton)
+	public  static void premusic(final Context context,int position,final PlayControl playControl)
 	{
 		position--;
 		if (position<0)
 			position=MusicplayerData.musicfile.size()-1;
-		playmusic(context,position,playbutton);
+		playmusic(context,position,playControl);
 	}
 	
 	public static  void save_music_list(final Context context)
