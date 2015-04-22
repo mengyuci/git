@@ -6,6 +6,8 @@ import java.util.Iterator;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -25,6 +27,8 @@ public class Scan_music_activity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.scan_music_xml);
+		SysApplication.getInstance().addActivity(this); 
+		
 		find_music_number=(TextView) findViewById(R.id.find_music_number);
 		find_music_filepath_show=(TextView) findViewById(R.id.find_music_filepath_show);
 		find_music_complete=(Button) findViewById(R.id.find_music_complete);
@@ -38,7 +42,8 @@ public class Scan_music_activity extends Activity {
 			public void onClick(View v) {    
 				if (find_music_complete_flag==0){
 					scan_music_fuction(scan_file);
-					save_music_list();
+					saveMusicList();
+					//save_music_list();
 					find_music_complete_flag=1;
 					find_music_complete.setText("返回");
 					find_music_filepath_show.setText("扫描完成");
@@ -86,9 +91,26 @@ public class Scan_music_activity extends Activity {
 					find_music_number.setText(number);
 				}
 			}
-		}
+		} 
 	}
-	
+	private void saveMusicList(){
+		MusicplayDBHelper dbHelp=new MusicplayDBHelper(this);
+		SQLiteDatabase db=dbHelp.getWritableDatabase();
+		Cursor c;
+		for (Iterator<String> it=MusicplayerData.All_musicfile.iterator();it.hasNext();){
+			String filepath=it.next();
+			c = db.rawQuery("select filepath from "+MusicplayerData.currentMusiclistFilename+" where filepath='"+filepath+"'",null);
+			if(!c.moveToFirst()){
+				MusicplayerDBOperate.insert(filepath, db);
+			}
+			db.execSQL("update "+MusicplayerData.dbAllMusicTable+" set flag=1 where filepath='"+filepath+"'");
+		}
+		db.execSQL("delete from "+MusicplayerData.dbAllMusicTable+" where flag=0");
+		db.execSQL("update "+MusicplayerData.dbAllMusicTable+" set flag=0");
+		MusicplayerData.currentMusiclistFilename=MusicplayerData.dbAllMusicTable;
+		MusicplayerData.currentPosition=0;
+		MusicplayerControl.saveMusicList(this);
+	}
 	private void save_music_list()
 	{
 		try{

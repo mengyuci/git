@@ -12,4 +12,5 @@
     <string name="waitplaylist">待播列表</string>
     <string name="songnamedefault">歌曲名</string>
     <string name="singernamedefault">歌手姓名</string>
+    <string name="hotnumber">热度值:</string>
 </resources>
