@@ -43,7 +43,6 @@ public class Scan_music_activity extends Activity {
 				if (find_music_complete_flag==0){
 					scan_music_fuction(scan_file);
 					saveMusicList();
-					//save_music_list();
 					find_music_complete_flag=1;
 					find_music_complete.setText("返回");
 					find_music_filepath_show.setText("扫描完成");
@@ -51,7 +50,8 @@ public class Scan_music_activity extends Activity {
 				else if (find_music_complete_flag==1)
 				{
 					Intent it = new Intent(Scan_music_activity.this, MainActivity.class);
-			        startActivity(it);   
+			        startActivity(it);  
+			        System.exit(0);
 				}
             } 
 		});
@@ -110,22 +110,5 @@ public class Scan_music_activity extends Activity {
 		MusicplayerData.currentMusiclistFilename=MusicplayerData.dbAllMusicTable;
 		MusicplayerData.currentPosition=0;
 		MusicplayerControl.saveMusicList(this);
-	}
-	private void save_music_list()
-	{
-		try{
-		       FileOutputStream fout = openFileOutput(MusicplayerData.allMusiclistFilepath,Activity.MODE_PRIVATE);   
-		       for (Iterator<String> it=MusicplayerData.All_musicfile.iterator();it.hasNext();)
-		       {
-		    	   String src=it.next();
-		    	   byte [] bytes = src.getBytes();   
-		    	   fout.write(bytes);
-		    	   String newLine = System.getProperty("line.separator");
-		    	   fout.write(newLine.getBytes());
-		       }
-		       fout.close();   
-		     }catch(Exception e){   
-		        e.printStackTrace();   
-		     }   
 	}
 }

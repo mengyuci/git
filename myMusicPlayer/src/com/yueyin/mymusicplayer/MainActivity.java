@@ -229,7 +229,8 @@ public class MainActivity extends Activity {
     private void readMusicFileList(){
     	MusicplayDBHelper dbHelp=new MusicplayDBHelper(this);
 		SQLiteDatabase db=dbHelp.getWritableDatabase();
-		Cursor c = db.rawQuery("select filepath from "+MusicplayerData.currentMusiclistFilename,null);
+		Cursor c=db.rawQuery("select filepath from "+MusicplayerData.dbLastMusicListTable, null);
+//		Cursor c = db.rawQuery("select filepath from "+MusicplayerData.currentMusiclistFilename,null);
 		String filepath;
 		if(c.moveToFirst()){
 		    for(int i=0;i<c.getCount();i++){

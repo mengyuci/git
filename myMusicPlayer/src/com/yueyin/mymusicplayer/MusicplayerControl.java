@@ -3,7 +3,6 @@ package com.yueyin.mymusicplayer;
 import java.util.Iterator;
 import java.util.Random;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -12,12 +11,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
-import android.os.Bundle;
-import android.os.Handler;
-import android.widget.ImageButton;
 
 public class MusicplayerControl  {
-	private static boolean isFirstPlay=true;
 	private static String filepath;
 	static Random random=new Random();
 	public static  void playmusic(final Context context,final int position,final PlayControl playControl)
@@ -126,23 +121,25 @@ public class MusicplayerControl  {
 		MusicplayDBHelper dbHelp=new MusicplayDBHelper(MusicplayerData.context);
 		SQLiteDatabase db=dbHelp.getWritableDatabase();
 		String filepath=MusicplayerData.musicfile.get(MusicplayerData.currentPosition%MusicplayerData.musicfile.size());
-		db.execSQL("update "+MusicplayerData.currentMusiclistFilename+" set hotnum=hotnum+10 where filepath='"+filepath+"'");
+		db.execSQL("update "+MusicplayerData.dbAllMusicTable+" set hotnum=hotnum+10 where filepath='"+filepath+"'");
 		int hotnum=MusicplayerDBOperate.getHotnum(MusicplayerData.currentMusiclistFilename, filepath, db);
 		playControl.setHotnum("hot:"+hotnum);
+		MusicplayerData.musicInfoAll.setHotnum(hotnum);
 	}
 	public void subHotNumber(final PlayControl playControl){
 		MusicplayDBHelper dbHelp=new MusicplayDBHelper(MusicplayerData.context);
 		SQLiteDatabase db=dbHelp.getWritableDatabase();
 		String filepath=MusicplayerData.musicfile.get(MusicplayerData.currentPosition%MusicplayerData.musicfile.size());
-		Cursor c=db.rawQuery("select hotnum from "+MusicplayerData.currentMusiclistFilename+" where filepath='"+filepath+"'", null);
+		Cursor c=db.rawQuery("select hotnum from "+MusicplayerData.dbAllMusicTable+" where filepath='"+filepath+"'", null);
 		if (c.moveToFirst()){
 			int t=c.getInt(0);
 			if (t>=10){
-				db.execSQL("update "+MusicplayerData.currentMusiclistFilename+" set hotnum=hotnum-10 where filepath='"+filepath+"'");
+				db.execSQL("update "+MusicplayerData.dbAllMusicTable+" set hotnum=hotnum-10 where filepath='"+filepath+"'");
 			}
 		}
 		int hotnum=MusicplayerDBOperate.getHotnum(MusicplayerData.currentMusiclistFilename, filepath, db);
 		playControl.setHotnum("hot:"+hotnum);
+		MusicplayerData.musicInfoAll.setHotnum(hotnum);
 	}
 
 	public static int getRandom(){

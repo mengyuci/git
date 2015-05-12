@@ -11,9 +11,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
@@ -67,8 +69,25 @@ public class SongList extends Activity {
 		
 		handler.post(new Runnable() {  
             public void run() {  
-            	MusicplayerData.playControlSongList.setPlayControl(MusicplayerData.playControlMain);
-                handler.postDelayed(this, 100);  
+            	handler.postDelayed(this, 100);  
+                if (!MusicplayerData.playControlSongList.isStartTrackingTouch)  
+                {
+                	if (!MusicplayerData.myMediaPlayer.isPlaying()){
+            			Resources r = MusicplayerData.context.getResources(); 
+            			Drawable img=r.getDrawable(R.drawable.play);
+            			MusicplayerData.playControlSongList.play.setImageDrawable(img);
+            		}else{
+            			Resources r = MusicplayerData.context.getResources(); 
+            			Drawable img=r.getDrawable(R.drawable.pause);
+            			MusicplayerData.playControlSongList.play.setImageDrawable(img);
+            		}
+        	    	MusicplayerData.playControlSongList.setSingerSongName(
+        	    			MusicplayerData.musicInfoAll
+        	    			.title, 
+        	    			MusicplayerData.musicInfoAll.artist,"hot:"+MusicplayerData.musicInfoAll.hotnum);
+                    MusicplayerData.playControlSongList.seekbar.setMax(MusicplayerData.myMediaPlayer.getDuration()); 
+                	MusicplayerData.playControlSongList.seekbar.setProgress(MusicplayerData.myMediaPlayer.getCurrentPosition());  
+                }
             }  
         });  
 		
@@ -159,7 +178,7 @@ public class SongList extends Activity {
 	private void getMusicListSingerAlbumFolder(String rowValue,String rowName){
 		MusicplayDBHelper dbHelp=new MusicplayDBHelper(this);
 		SQLiteDatabase db=dbHelp.getWritableDatabase();
-		Cursor c=db.rawQuery("select sum(hotnum) from "+tableName+" where "+rowName+"='"+rowValue+"'", null);
+		Cursor c=db.rawQuery("select sum(hotnum) from "+MusicplayerData.dbAllMusicTable+" where "+rowName+"='"+rowValue+"'", null);
 		int totHotNumber=0;
 		if (c.moveToFirst()){
 			totHotNumber=c.getInt(0);
@@ -171,12 +190,12 @@ public class SongList extends Activity {
 	private void getMusicListHotRank(){
 		MusicplayDBHelper dbHelp=new MusicplayDBHelper(this);
 		SQLiteDatabase db=dbHelp.getWritableDatabase();
-		Cursor c=db.rawQuery("select sum(hotnum) from "+tableName, null);
+		Cursor c=db.rawQuery("select sum(hotnum) from "+MusicplayerData.dbAllMusicTable, null);
 		int totHotNumber=0;
 		if (c.moveToFirst()){
 			totHotNumber=c.getInt(0);
 		}
-		c = db.rawQuery("select filepath from "+tableName+" order by hotnum desc",null);
+		c = db.rawQuery("select filepath from "+MusicplayerData.dbAllMusicTable+" order by hotnum desc",null);
 		makeData(totHotNumber,c,db);
 	}
 	
@@ -204,7 +223,7 @@ public class SongList extends Activity {
 		        	c.moveToNext();
 		        	continue;
 		        }
-		        Cursor cu=db.rawQuery("select hotnum from "+tableName+" where filepath='"+filepath+"'", null);
+		        Cursor cu=db.rawQuery("select hotnum from "+MusicplayerData.dbAllMusicTable+" where filepath='"+filepath+"'", null);
 				int hotnum=0;
 				if (cu.moveToFirst()){
 					hotnum=cu.getInt(0);
@@ -224,6 +243,7 @@ public class SongList extends Activity {
 	{
 		Intent it = new Intent(SongList.this, Scan_music_activity.class);
         startActivity(it);   
+        System.exit(0);
 	}
 	private void activity_exit()
 	{
@@ -351,9 +371,9 @@ public class SongList extends Activity {
 					hotnum=cu.getInt(0);
 				}
 				if (position!=0)
-					db.execSQL("insert into "+tableName+"(filepath,hotnum) values('"+currentFilepath+"',"+hotnum+")");
-				else 
 					db.execSQL("insert into "+tableName+"(filepath) values('"+currentFilepath+"'"+")");
+				db.execSQL("updata into "+MusicplayerData.dbAllMusicTable+" set hotnum="+hotnum+" where filepath='"+currentFilepath+"'");
+				
 				popupWindowAdd.dismiss();
 			}
 		});
