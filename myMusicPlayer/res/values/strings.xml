@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">乐音</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="all_music">全部歌曲</string>
+    <string name="hot_rank">热度榜</string>
+    <string name="singer">歌手</string>
+    <string name="album">专辑</string>
+    <string name="playlist">最近播放</string>
+    <string name="waitplaylist">待播列表</string>
+    <string name="songnamedefault">歌曲名</string>
+    <string name="singernamedefault">歌手姓名</string>
+    <string name="hotnumber">热度值:</string>
+</resources>

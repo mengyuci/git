@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <Button 
+        android:id="@+id/playmode"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="播放模式"
+        />
+    <Button 
+        android:id="@+id/timingexit"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/playmode"
+        android:text="定时退出"
+        />
+    <Button 
+        android:id="@+id/exit"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/timingexit"
+        android:text="退出"
+        />
+        
+</RelativeLayout>
