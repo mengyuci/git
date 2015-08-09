@@ -111,6 +111,11 @@ public class MyListActivity extends Activity {
 
                     public void onClick(DialogInterface dialog, int which) {
                     	newListName = inputServer.getText().toString();
+                    	if (newListName.charAt(0)>='0'&&newListName.charAt(0)<='9'){
+                    		Toast toast = Toast.makeText(MyListActivity.this, "列表名格式错误！", Toast.LENGTH_SHORT);                    
+        			        toast.show();
+        			        return ;
+                    	}
                     	if (checkNewListName()){
         					MusicplayDBHelper dbHelp=new MusicplayDBHelper(MusicplayerData.context);
         					SQLiteDatabase db=dbHelp.getWritableDatabase();

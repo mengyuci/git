@@ -43,7 +43,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_below="@id/singer"
 	    android:background="#FFFFFFFF"
-	    android:src="@drawable/playlist"/>
+	    android:src="@drawable/yibo"/>
 	<ImageButton 
 	    android:id="@+id/waitplaylist"
 	    android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
 	    android:layout_toRightOf="@id/playlist"
 	    android:layout_below="@id/album"
 	    android:background="#FFFFFFFF"
-	    android:src="@drawable/playlist"/>
+	    android:src="@drawable/daibo"/>
 	
 	<ImageButton 
 	    android:id="@+id/mylist"
@@ -59,7 +59,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_below="@id/playlist"
 	    android:background="#FFFFFFFF"
-	    android:src="@drawable/playlist"/>
+	    android:src="@drawable/mylist"/>
 	<ImageButton 
 	    android:id="@+id/folder"
 	    android:layout_width="wrap_content"

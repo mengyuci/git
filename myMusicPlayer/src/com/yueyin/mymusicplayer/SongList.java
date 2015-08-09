@@ -352,11 +352,20 @@ public class SongList extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
 				String tableName=listname.get(position);
 				
-				if (position==0){
-					tableName=MusicplayerData.dbNextMusicListTable;
-				}
 				MusicplayDBHelper dbHelp=new MusicplayDBHelper(MusicplayerData.context);
 				SQLiteDatabase db=dbHelp.getWritableDatabase();
+				
+				if (position==0){
+					tableName=MusicplayerData.dbNextMusicListTable;
+					Cursor cc=db.rawQuery("select count(*) from "+tableName+" where filepath='"+currentFilepath+"'", null);
+					
+					if (cc.moveToFirst()){
+						if (cc.getInt(0)==0){
+							db.execSQL("insert into "+tableName+"(filepath) values('"+currentFilepath+"'"+")");
+						}
+					}
+				}
+				
 				Cursor cu=db.rawQuery("select count(*) from "+tableName+" where filepath='"+currentFilepath+"'", null);
 				if (cu.moveToFirst()){
 					if (cu.getInt(0)!=0){
@@ -372,7 +381,7 @@ public class SongList extends Activity {
 				}
 				if (position!=0)
 					db.execSQL("insert into "+tableName+"(filepath) values('"+currentFilepath+"'"+")");
-				db.execSQL("updata into "+MusicplayerData.dbAllMusicTable+" set hotnum="+hotnum+" where filepath='"+currentFilepath+"'");
+				db.execSQL("update "+MusicplayerData.dbAllMusicTable+" set hotnum="+hotnum+" where filepath='"+currentFilepath+"'");
 				
 				popupWindowAdd.dismiss();
 			}
